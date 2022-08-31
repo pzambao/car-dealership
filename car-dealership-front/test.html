@@ -23,11 +23,11 @@
         success: function(response) {
           for(var k in response) {
             $('.msg').text('Carro: ' + response[k].model)
-            console.log(response)
+            console.log(response[k].model)
           }
         }
       })
-[0]
+      
       // $.ajax({
       //   url: url,
       //   type: 'GET',

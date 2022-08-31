@@ -101,3 +101,14 @@ DealerShip = function(){
   }
 }
 
+
+PageConstructor = function(){
+  var obj = undefined;
+  let that = this;
+
+  this.create = function(o){
+    obj = o;
+    this.formClearAll();
+    this.create
+  }
+}
