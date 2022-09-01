@@ -1,25 +1,24 @@
 // Classe que organiza a página
 // Um PageOrganizer tem N PageConstructors
-// Um PageOrganizer tem N PageLoaders
+// Um PageOrganizer tem N PageInteractors
 PageOrganizer = function() {
   const pageConstructor = new PageConstructor();
-  const pageLoader = new PageLoader();
+  const pageInteractor = new PageInteractor();
   
   pageConstructor.html_base();
   pageConstructor.vehicle_form();
   pageConstructor.vehicles_table();
   pageConstructor.vehicles_charts();
   
-  pageLoader.loadCar();
-  pageLoader.loadTable();  
-  pageLoader.loadChart();
+  pageInteractor.loadCar();
+  pageInteractor.deleteCar();
+  pageInteractor.loadTable();  
+  pageInteractor.loadChart();
 }
 
 // Classe que constrói dinâmicamente o html da página
-// Um pageConstructor possui
 PageConstructor = function(){
-  const pageLoader = new PageLoader();
-
+  
   this.html_base = function(){
     $('#dealership-page').append(
       $('<nav>', {id: 'sidebar', class: 'active'}).append(
@@ -43,7 +42,7 @@ PageConstructor = function(){
             ),
             $('<li>').append(
               $('<a>', {href: '#', id: 'chart'}).append(
-                $('<span>', {class: 'fa fa-home mr-3', onclick: 'pageLoader.toggleMenu()'}),('Gráficos')
+                $('<span>', {class: 'fa fa-home mr-3'}),('Gráficos')
               )
             ),
             $('<li>').append(
@@ -158,7 +157,8 @@ PageConstructor = function(){
 
 }
 
-PageLoader = function(that) {
+// Classe que interage com a API via ajax para manipular informações
+PageInteractor = function() {
   var url = "http://localhost:3000/cars"
   var that = this
 
@@ -169,8 +169,8 @@ PageLoader = function(that) {
       const maker = $('#car-maker').val();
       const year = $('#car-year').val();
 
-      let teste = {'model': model, 'maker': maker, 'year': year}
-      const myJSON = JSON.stringify(teste)
+      let data = {'model': model, 'maker': maker, 'year': year}
+      const myJSON = JSON.stringify(data)
       
       const Toast = Swal.mixin({
         toast: true,
@@ -220,10 +220,11 @@ PageLoader = function(that) {
           for(var k in response) {
             $('#d-table-body').append(
               $('<tr>').append(
+                $('<td>', {hidden: 'hidden', id: 'deleteId'}).append(response[k].id),
                 $('<td>').append(response[k].model),
                 $('<td>').append(response[k].maker),
                 $('<td>').append(response[k].year),
-                $('<td>').append($('<input>', {type: 'button', value: 'deletar'}))
+                $('<td>').append($('<input>', {type: 'submit', id: 'deleteButton', value: 'deletar'}))
               )
             )
           }
@@ -265,6 +266,40 @@ PageLoader = function(that) {
       }
     })
   }
+
+  this.deleteCar = function(){
+    $('#deleteButton').on('click', function(e){
+      const id = $('#deleteId').text();
+      let url = "http://localhost:3000/cars/";
+      url = url.concat(id)
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: url,
+            method: "DELETE"
+          }).done(function (response) {
+            console.log(response);
+          });
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+        }
+      })
+
+      e.preventDefault(); 
+    })
+  };
 
  
 
