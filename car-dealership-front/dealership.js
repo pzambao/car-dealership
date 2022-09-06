@@ -1,3 +1,23 @@
+// JS OO.
+// Com duas Classes ou mais.
+// Bootstrap 
+//    - cdn referenciado na index
+// Criação dinâmica de HTML
+//    - construção realizada via jquery através do metodo append
+// Feedbacks em Alertas para usuário 
+//    - utilizado o sweetalert para personalização dos alerts
+//    - utilização do mesmo em todas validações ajax
+//    - cdn referenciado na index
+// Sistema de Abas horizontal ou vertical.
+//    - criação feita dentro da classe page constructor na construção do html_base
+// Gráficos.
+//    - Gerados com auxilio da lib chart.js
+//    - graficos construidos na classe PageConstructor
+// Consulta em API Ajax
+//    - Todas interações com a api está sendo feita via ajax
+//    - interações feitas na classe PageInteractor
+
+
 // Classe que organiza a página
 // Um PageOrganizer tem N PageConstructors
 // Um PageOrganizer tem N PageInteractors
@@ -11,7 +31,7 @@ PageOrganizer = function() {
   pageConstructor.vehicles_charts();
   
   pageInteractor.loadCar();
-  pageInteractor.deleteCar();
+  //pageInteractor.deleteCar();
   pageInteractor.loadTable();  
   pageInteractor.loadChart();
 }
@@ -37,22 +57,22 @@ PageConstructor = function(){
           $('<ul>', {class: 'list-unstyled components mb-5'}).append(
             $('<li>', {class: 'active'}).append(
               $('<a>', {href: '#', id: 'all'}).append(
-                $('<span>', {class: 'fa fa-home mr-3'}),('Ver Tudo')
+                $('<span>', {class: 'fa-solid fa-expand mr-3'}),('Ver Tudo')
               )
             ),
             $('<li>').append(
               $('<a>', {href: '#', id: 'chart'}).append(
-                $('<span>', {class: 'fa fa-home mr-3'}),('Gráficos')
+                $('<span>', {class: 'fa-solid fa-chart-pie mr-3'}),('Gráficos')
               )
             ),
             $('<li>').append(
               $('<a>', {href: '#', id: 'create'}).append(
-                $('<span>', {class: 'fa fa-home mr-3'}),('Cadastro')
+                $('<span>', {class: 'fa-solid fa-plus mr-3'}),('Cadastro')
               )
             ),
             $('<li>').append(
               $('<a>', {href: '#', id: 'table'}).append(
-                $('<span>', {class: 'fa fa-home mr-3'}),('Estoque')
+                $('<span>', {class: 'fa-solid fa-box-archive mr-3'}),('Estoque')
               )
             )
           )
@@ -159,12 +179,11 @@ PageConstructor = function(){
 
 // Classe que interage com a API via ajax para manipular informações
 PageInteractor = function() {
-  var url = "http://localhost:3000/cars"
-  var that = this
+  let url = "http://localhost:3000/cars/"
+  let that = this
 
   this.loadCar = function(){
     $('#create-car-id').on('submit', function(e){
-      const url = "http://localhost:3000/cars/"
       const model = $('#car-model').val();
       const maker = $('#car-maker').val();
       const year = $('#car-year').val();
@@ -204,7 +223,6 @@ PageInteractor = function() {
         })
       });
 
-      
       e.preventDefault();
     });
   }
@@ -267,41 +285,45 @@ PageInteractor = function() {
     })
   }
 
-  this.deleteCar = function(){
-    $('#deleteButton').on('click', function(e){
-      const id = $('#deleteId').text();
-      let url = "http://localhost:3000/cars/";
-      url = url.concat(id)
+  // this.deleteCar = function(){
+  //   $('#deleteButton').on('click', function(e){
+  //     const id = $('#deleteId').text();
+  //     url = url.concat(id)
 
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          $.ajax({
-            url: url,
-            method: "DELETE"
-          }).done(function (response) {
-            console.log(response);
-          });
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
-        }
-      })
+  //     Swal.fire({
+  //       title: 'Are you sure?',
+  //       text: "You won't be able to revert this!",
+  //       icon: 'warning',
+  //       showCancelButton: true,
+  //       confirmButtonColor: '#3085d6',
+  //       cancelButtonColor: '#d33',
+  //       confirmButtonText: 'Yes, delete it!'
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         $.ajax({
+  //           url: url,
+  //           method: "DELETE"
+  //         }).done(function (response) {
+  //           Swal.fire(
+  //             'Sucesso!',
+  //             'Veículo deletado do sistema',
+  //             'success'
+  //           )
+  //           console.log(response);
+  //           that.loadTable();
+  //           that.loadChart();
+  //         }).fail(function (response) {
+  //           Swal.fire(
+  //             'Falha!',
+  //             'Não foi possível deletar o veículo do sistema',
+  //             'error'
+  //           )
+  //         });
+         
+  //       }
+  //     })
 
-      e.preventDefault(); 
-    })
-  };
-
- 
-
+  //     e.preventDefault(); 
+  //   })
+  // };
 }
-
